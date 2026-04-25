@@ -66,6 +66,9 @@
   <img src="photo1.jpg">
   <img src="photo2.jpg">
   <img src="photo3.jpg">
+  <img src="photo4.jpg">
+  <img src="photo5.jpg">
+  <img src="photo6.jpg">    
 </div>
     <button onclick="alert('Gallery feature coming soon')">Upload Photos</button>
   </div>
@@ -81,5 +84,17 @@
   </div>
 </section><footer>
   <p>© 2025 जतन स्वराज्याचे परिवार</p>
-</footer></body>
+</footer>
+
+<script>
+  const gallery = document.querySelector('.gallery');
+
+  for (let i = 1; i <= 10; i++) {
+    const img = document.createElement("img");
+    img.src = "photo" + i + ".jpg";
+    gallery.appendChild(img);
+  }
+</script>
+
+</body>
 </html>

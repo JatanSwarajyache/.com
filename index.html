@@ -62,13 +62,7 @@
   <div class="card">
     <p>परिवाराचा इतिहास</p>
     <div class="gallery">
-  <img src="photo.jpg">
-  <img src="photo1.jpg">
-  <img src="photo2.jpg">
-  <img src="photo3.jpg">
-  <img src="photo4.jpg">
-  <img src="photo5.jpg">
-  <img src="photo6.jpg">    
+   
 </div>
     <button onclick="alert('Gallery feature coming soon')">Upload Photos</button>
   </div>
@@ -87,13 +81,18 @@
 </footer>
 
 <script>
-  const gallery = document.querySelector('.gallery');
+fetch("http://localhost:3000/photos")
+  .then(res => res.json())
+  .then(images => {
+    const gallery = document.querySelector('.gallery');
+    gallery.innerHTML = "";
 
-  for (let i = 1; i <= 10; i++) {
-    const img = document.createElement("img");
-    img.src = "photo" + i + ".jpg";
-    gallery.appendChild(img);
-  }
+    images.forEach(img => {
+      const image = document.createElement("img");
+      image.src = "http://localhost:3000/uploads/" + img;
+      gallery.appendChild(image);
+    });
+  });
 </script>
 
 </body>

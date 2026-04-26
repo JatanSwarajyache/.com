@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<body style="background:#111;color:#fff;text-align:center;">
+
+<h2>Admin Login</h2>
+<input id="user" placeholder="username"><br>
+<input id="pass" type="password" placeholder="password"><br>
+<button onclick="login()">Login</button>
+
+<div id="panel" style="display:none;">
+  <h2>Upload Photo</h2>
+  <input type="file" id="file"><br>
+  <button onclick="upload()">Upload</button>
+
+  <h2>All Photos</h2>
+  <div id="photos"></div>
+</div>
+
+<script>
+let token = "";
+
+// LOGIN
+function login(){
+  fetch("http://localhost:3000/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      username: document.getElementById("user").value,
+      password: document.getElementById("pass").value
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if(data.token === "ok"){
+      document.getElementById("panel").style.display = "block";
+      alert("Login successful");
+      loadPhotos();
+    } else {
+      alert("Invalid login");
+    }
+  })
+  .catch(err => {
+    alert("Server error");
+    console.log(err);
+  });
+}
+
+// UPLOAD
+function upload(){
+  const formData = new FormData();
+  formData.append("photo", file.files[0]);
+
+  fetch("http://localhost:3000/upload", {
+    method:"POST",
+    body: formData
+  })
+  .then(res=>res.text())
+  .then(msg=>{
+    alert(msg);
+    loadPhotos();
+  });
+}
+
+// LOAD PHOTOS
+function loadPhotos(){
+  fetch("http://localhost:3000/photos")
+  .then(res=>res.json())
+  .then(data=>{
+    const div = document.getElementById("photos");
+    div.innerHTML = "";
+
+    data.forEach(img=>{
+      const container = document.createElement("div");
+
+      const image = document.createElement("img");
+      image.src = "http://localhost:3000/uploads/" + img;
+      image.width = 100;
+
+      const btn = document.createElement("button");
+      btn.innerText = "Delete";
+      btn.onclick = () => deletePhoto(img);
+
+      container.appendChild(image);
+      container.appendChild(btn);
+
+      div.appendChild(container);
+    });
+  });
+}
+
+// DELETE
+function deletePhoto(name){
+  fetch("http://localhost:3000/delete/" + encodeURIComponent(name), {
+    method: "DELETE"
+  })
+  .then(res => res.text())
+  .then(msg => {
+    alert(msg);
+    loadPhotos();
+  });
+}
+</script>
+
+</body>
+</html>
